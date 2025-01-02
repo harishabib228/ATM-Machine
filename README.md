@@ -1,122 +1,101 @@
 #include <iostream>
-
 using namespace std;
-
-class ATM
+int main()
 {
-private:
     int pin = 1234;
-    int balance = 1000;
+    int enteredPin;
+    double balance = 1000.00;
     int attempts = 0;
+    bool isLocked = false;
 
-public:
-    void login()
+    while (attempts < 3)
 	{
-        int enteredPin;
-        while (attempts < 3)
+        cout << "Enter PIN: ";
+        cin >> enteredPin;
+
+        if (enteredPin == pin)
 		{
-            cout << "Enter PIN: ";
-            cin >> enteredPin;
-
-            if (enteredPin == pin)
-			{
-                cout << "Login successful!" << endl;
-                showMenu();
-                return;
-            }
-				else
-			{
-                cout << "Incorrect PIN. You have " << 3 - (attempts + 1) << " attempts left." << endl;
-                attempts++;
-            }
-        }
-        cout << "ATM locked. Too many incorrect attempts." << endl;
-    }
-
-    void showMenu()
-	{
-        int choice;
-        do
-		{
-            cout << "\nATM Menu:\n";
-            cout << "1. Check Balance\n";
-            cout << "2. Withdraw Money\n";
-            cout << "3. Deposit Money\n";
-            cout << "4. Change PIN\n";
-            cout << "5. Exit\n";
-            cout << "Enter your choice: ";
-            cin >> choice;
-
-            switch (choice)
-			{
-                case 1:
-                    checkBalance();
-                    break;
-                case 2:
-                    withdrawMoney();
-                    break;
-                case 3:
-                    depositMoney();
-                    break;
-                case 4:
-                    changePin();
-                    break;
-                case 5:
-                    cout << "Thank you for using the ATM. Goodbye!" << endl;
-                    exit(0);
-                    break;
-                default:
-                    cout << "Invalid option. Please try again." << endl;
-            }
-        }
-		while (true);
-    }
-
-    void checkBalance()
-	{
-        cout << "Your current balance is: $" << balance << endl;
-    }
-
-    void withdrawMoney()
-	{
-        int amount;
-        cout << "Enter amount to withdraw: $";
-        cin >> amount;
-
-        if (amount > balance)
-		{
-            cout << "Insufficient balance!" << endl;
+            cout << "PIN correct! Welcome to the ATM.\n";
+            break;
         }
 			else
 		{
-            balance -= amount;
-            cout << "You have successfully withdrawn $" << amount << ". Your new balance is: $" << balance << endl;
+            attempts++;
+            cout << "Incorrect PIN. You have " << 3 - attempts << " attempt(s) left.\n";
+        }
+	        if (attempts == 3)
+		{
+            cout << "ATM is locked due to 3 failed attempts.\n";
+            isLocked = true;
         }
     }
 
-    void depositMoney()
+    // If ATM is locked, exit the program
+    	if (isLocked)
 	{
-        int amount;
-        cout << "Enter amount to deposit: $";
-        cin >> amount;
-
-        balance += amount;
-        cout << "You have successfully deposited $" << amount << ". Your new balance is: $" << balance << endl;
+        return 0;
     }
 
-    void changePin()
+    // Main menu after successful login
+    int choice;
+    while (true)
 	{
-        int newPin;
-        cout << "Enter your new PIN: ";
-        cin >> newPin;
-        pin = newPin;
-        cout << "Your PIN has been successfully changed." << endl;
-    }
-};
+        cout << "\nATM Menu:\n";
+        cout << "1. Check Balance\n";
+        cout << "2. Withdraw Money\n";
+        cout << "3. Deposit Money\n";
+        cout << "4. Change PIN\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
 
-int main()
-{
-    ATM atm;
-    atm.login();
+        	switch (choice)
+		{
+            case 1: // Check Balance
+                cout << "Your balance is: $" << balance << "\n";
+                break;
+            case 2:
+			{ // Withdraw Money
+                double withdrawAmount;
+                cout << "Enter amount to withdraw: $";
+                cin >> withdrawAmount;
+                if (withdrawAmount <= balance)
+				{
+                    balance -= withdrawAmount;
+                    cout << "You have withdrawn $" << withdrawAmount << "\n";
+                    cout << "Remaining balance: $" << balance << "\n";
+                }
+					else
+				{
+                    cout << "Insufficient funds.\n";
+                }
+                break;
+            }
+            case 3:
+			{ // Deposit Money
+                double depositAmount;
+                cout << "Enter amount to deposit: $";
+                cin >> depositAmount;
+                balance += depositAmount;
+                cout << "You have deposited $" << depositAmount << "\n";
+                cout << "New balance: $" << balance << "\n";
+                break;
+            }
+            case 4:
+			{ // Change PIN
+                int newPin;
+                cout << "Enter new PIN: ";
+                cin >> newPin;
+                pin = newPin;
+                cout << "Your PIN has been changed successfully.\n";
+                break;
+            }
+            case 5: // Exit
+                cout << "Exiting... Thank you for using the ATM!\n";
+                return 0;
+            default:
+                cout << "Invalid option. Please try again.\n";
+        }
+    }
     return 0;
 }
