@@ -2,6 +2,7 @@
 using namespace std;
 int main()
 {
+
     int pin = 1234;
     int enteredPin;
     double balance = 1000.00;
